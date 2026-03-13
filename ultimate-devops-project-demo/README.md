@@ -4,13 +4,10 @@ This project demonstrates a comprehensive **end-to-end CI/CD infrastructure** fo
 It leverages **Terraform** for AWS infrastructure provisioning, **GitHub Actions** for continuous integration, and **ArgoCD** for GitOps-based continuous deployment on a Kubernetes cluster.
 
 ---
-[Project overview](https://github.com/I-am-nk/ultimate-devops-project-demo/blob/main/Project%20Overview.md)
-
----
 
 ## Project Architecture
 
-![new1](https://github.com/user-attachments/assets/23c24930-9523-4a61-aea1-e01eae6553ef)
+![alt text](<../Images/Ultimate Project Architecture.gif>)
 
 ---
 ### 1. ☁️ AWS Infrastructure (Terraform Provisioned)
@@ -118,8 +115,8 @@ Defines the pipeline with:
 ---
 
 ## 👨‍💻 Author
-**Nandkishor Khandare**  
-Cloud & DevOps / SRE Engineer  
+**Ikenna Ubah**  
+Cloud Platform |  DevOps Engineer  
 
 ## 📬 **Contact**: 
-[LinkedIn](https://www.linkedin.com/in/nandkishor-khandare-616492215/) | [Email](nandkishor.k6e@gmail.com)
+[LinkedIn](https://www.linkedin.com/in/ikenna2/) | [Email](Ikennaubah2@yahoo.com)
