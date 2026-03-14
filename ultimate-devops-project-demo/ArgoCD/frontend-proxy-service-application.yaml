@@ -1,0 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: frontend-proxy-service
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Ike-DevCloudIQ/end-to-end-devops-aws
+    targetRevision: HEAD
+    path: ultimate-devops-project-demo/ArgoCD/frontend-proxy-service
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
