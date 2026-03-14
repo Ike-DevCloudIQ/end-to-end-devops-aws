@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: demo-app
-          image: nginx:1.25
+          image: emekaezedozie276/demo-app:run-3
           ports:
             - containerPort: 80
           resources:
