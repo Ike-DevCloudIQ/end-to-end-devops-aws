@@ -6,7 +6,7 @@ on:
       - main
     paths:
       - ultimate-devops-project-demo/demo-app-image/**
-      - ultimate-devops-project-demo/.github/workflows/cd-demo-app-gitops.yaml
+      - .github/workflows/cd-demo-app-gitops.yaml
   workflow_dispatch:
 
 permissions:
