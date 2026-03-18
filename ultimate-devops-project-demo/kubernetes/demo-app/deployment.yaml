@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: demo-app
-          image: emekaezedozie276/demo-app:run-3
+          image: emekaezedozie276/demo-app:run-4
           ports:
             - containerPort: 80
           resources:
