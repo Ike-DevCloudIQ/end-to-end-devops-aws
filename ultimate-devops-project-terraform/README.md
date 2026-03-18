@@ -1,180 +1,163 @@
-# 🚀 Creating EKS, VPC & Remote Backend Resources on AWS using Terraform
+# Terraform on AWS: EKS, VPC, and Remote State Backend
 
-![Terraform](https://img.shields.io/badge/Terraform-IaC-5C4EE5?logo=terraform&logoColor=white)
-![AWS](https://img.shields.io/badge/AWS-Cloud-FF9900?logo=amazon-aws&logoColor=white)
-![Kubernetes](https://img.shields.io/badge/Kubernetes-EKS-326CE5?logo=kubernetes&logoColor=white)
-![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?logo=github-actions&logoColor=white)
-![S3](https://img.shields.io/badge/AWS-S3-569A31?logo=amazons3&logoColor=white)
-![DynamoDB](https://img.shields.io/badge/AWS-DynamoDB-4053D6?logo=amazon-dynamodb&logoColor=white)
+This directory contains the Terraform implementation for the AWS infrastructure used by this project.
 
----
+It provisions:
+- A custom VPC with public and private subnets across 3 AZs
+- Internet Gateway, NAT Gateways, route tables, and subnet associations
+- An Amazon EKS cluster and managed node group
+- A remote Terraform backend (S3 + DynamoDB) for state storage and locking
 
-## 📖 Overview  
-This repository contains **Infrastructure as Code (IaC)** for deploying the **Ultimate DevOps Project Demo** application on AWS.  
-It provisions S3, DynamoDB, EKS Cluster and VPC.
+## Architecture Context
 
+![Project Architecture](../Images/Ultimate%20Project%20Architecture.gif)
 
----
+## What This Terraform Stack Builds
 
-## 📦 What’s Included  
+### Networking (VPC module)
+- VPC CIDR: `10.0.0.0/16`
+- 3 public subnets and 3 private subnets across `us-west-2a`, `us-west-2b`, `us-west-2c`
+- 1 Internet Gateway
+- 3 NAT Gateways (one per public subnet / AZ)
+- Public and private route tables + associations
 
-## 🗄️ S3 storing state file
-- Stores Terraform state remotely in an S3 bucket for better collaboration.
+### Kubernetes Platform (EKS module)
+- EKS cluster: `my-eks-cluster`
+- Kubernetes version: `1.30`
+- Managed node group: `general`
+- Node instance type: `t3.medium`
+- Default node scaling in Terraform:
+  - `min_size = 1`
+  - `desired_size = 2`
+  - `max_size = 4`
 
-## 🔒 DynamoDB for state locking
-- State locking to avoid race conditions while applying changes.
-- Ensures safe parallel execution of Terraform.
+### Remote State (backend)
+- S3 bucket for Terraform state: `demo-terraform-eks-state-184353012435`
+- DynamoDB table for state locking: `terraform-eks-state-locks`
+- S3 encryption enabled and bucket versioning enabled
 
-## ☸️ EKS
-- Creates an Amazon EKS cluster for secure deployment.
+## Implementation Evidence (Your Screenshots)
 
-## 🌐 VPC
-- Creates a secure VPC with network isolation using public/private subnets, route tables, and network connections.
+### Terraform Planning
 
+![Terraform Plan](../Images/Terraform%20%20Plan.png)
 
+### AWS Networking
 
----
+![VPC Overview](../Images/VPC%20Overview.png)
 
-## 🏗️ Project Structure  
+![NAT Gateways](../Images/NAT%20Gateways.png)
+
+### EKS Resources
+
+![EKS Cluster](../Images/EKS%20Cluster.png)
+
+![EKS Node Group](../Images/EKS%20Node%20group.png)
+
+![EKS Nodes](../Images/EKS%20Nodes.png)
+
+![EC2 Instances](../Images/EC2%20Instances%20(EKS%20Worker%20Nodes).png)
+
+## Directory Structure
+
+```text
+ultimate-devops-project-terraform/
+├── README.md
+└── Terraform/
+    ├── main.tf
+    ├── variables.tf
+    ├── outputs.tf
+    ├── backend/
+    │   ├── main.tf
+    │   └── outputs.tf
+    └── modules/
+        ├── vpc/
+        └── eks/
+```
+
+## Prerequisites
+
+- AWS account and IAM credentials with permissions for VPC, EKS, IAM, S3, DynamoDB, EC2
+- Terraform v1.x
+- AWS CLI configured locally
+- `kubectl` (for cluster verification)
+
+## Deployment Workflow
+
+### 1. Configure AWS CLI
 
 ```bash
-Terraform/
-│── main.tf               # Root module: entry point for Terraform execution
-│── variables.tf          # Input variable definitions for the root module
-│── outputs.tf            # Output values from the root module
-│
-├── backend/              # Backend configuration & state management
-│   ├── main.tf           # Defines backend (S3 + DynamoDB for state & locking)
-│   ├── outputs.tf        # Backend-related outputs
-│   ├── terraform.tfstate # Current Terraform state file
-│   ├── terraform.tfstate.backup # Backup of the state file
-│
-├── modules/              # Reusable infrastructure modules
-│   │
-│   ├── eks/              # Amazon EKS (Kubernetes) module
-│   │   ├── main.tf       # Resources for EKS cluster (nodes, roles, etc.)
-│   │   ├── variables.tf  # Inputs required for EKS
-│   │   ├── outputs.tf    # Outputs from EKS (endpoint, kubeconfig)
-│   │
-│   └── vpc/              # Amazon VPC networking module
-│       ├── main.tf       # Resources for VPC (subnets, IGW, NAT, etc.)
-│       ├── variables.tf  # Inputs required for VPC
-│       ├── outputs.tf    # Outputs from VPC (VPC ID, subnet IDs)
-
+aws configure
+aws sts get-caller-identity
 ```
 
-## ⚙️ Prerequisites
-- AWS account with programmatic access (IAM user/role).
-- Terraform installed locally.
-- AWS CLI installed and configured.
-- Sufficient permissions to create S3, DynamoDB, VPC, and EKS resources.
+### 2. Create Backend Resources (S3 + DynamoDB)
 
-## 🚀 Setup AWS CLI
-1) Install and configure AWS CLI to allow Terraform to access AWS APIs.  
-Official documentation: [Install AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html#getting-started-install-instructions)
+Run this once before provisioning the main stack:
 
-
-
-2) Install unzip (required for some AWS CLI packages):  
-   ```
-   sudo apt install unzip
-   ```
-
-3) Verify AWS CLI installation:  
-   ```
-   aws --version
-   ```
-   <img width="647" height="148" alt="image" src="https://github.com/user-attachments/assets/5c8d42fc-404f-48f4-95fc-941ad85289a6" />
-
-
-5) Configure AWS credentials and defaults:  
-   ```
-   aws configure
-   ```
-   Provide: AWS Access Key ID, AWS Secret Access Key, Default region name, Default output format.
-
-7) Verify configuration:  
-   ```
-   aws configure list
-   ```
-<img width="601" height="120" alt="image" src="https://github.com/user-attachments/assets/7c4d895d-5ef1-4677-8893-bc95c593748b" />
-
-## 🧭 Initialize Remote Backend (S3 + DynamoDB)
-1) Clone the repository containing your Terraform code and go to that directory:  
-   ```
-   git clone https://github.com/I-am-nk/ultimate-devops-project-terraform.git
-   ```
-
-2) Change directory to the backend folder (where backend config is stored).
-   ```
-   cd backend
-   ```
-<img width="949" height="93" alt="image" src="https://github.com/user-attachments/assets/c17902b2-e398-4623-96fd-eb66a11bb56e" />
-
-3) Initialize Terraform:  
-  ```
+```bash
+cd Terraform/backend
 terraform init
-   ```
-<img width="1292" height="583" alt="image" src="https://github.com/user-attachments/assets/13629d88-15d4-4afc-b1d6-cfba1a748059" />
-
-
-4) Review the plan:  
-   ```
-   terraform plan
-   ```
-<img width="1600" height="769" alt="image" src="https://github.com/user-attachments/assets/ce518c9e-f103-445c-aa50-6c3ab822e170" />
-
-5) Apply to create backend resources (S3 and DynamoDB):  
-```
+terraform plan
 terraform apply
 ```
 
+### 3. Provision VPC + EKS
 
-6) Approve when prompted with “yes.” Terraform will start creating resources.
-<img width="964" height="156" alt="image" src="https://github.com/user-attachments/assets/e557ee42-c207-4cdc-9f8b-5e494cbdb5f9" />
-
-## ✅ Verify Backend Resources
-7) Verify S3 bucket creation in the AWS Console.
-    <img width="1918" height="654" alt="image" src="https://github.com/user-attachments/assets/fcf21f20-62cf-47c5-98d3-8b4630641311" />
-
-8) Verify DynamoDB table creation in the AWS Console.
-    <img width="1919" height="539" alt="image" src="https://github.com/user-attachments/assets/0ef83e62-a53e-4c95-af11-5f8f51c20fea" />
-
-
-## ☸️ Create EKS and VPC
-1) Change directory to the main Terraform folder (project root, e.g., /Terraform).
-
-2) Initialize Terraform:  
-    ```
-     terraform init
-   ```
-
-3) Review the execution plan:  
-   ```
-       terraform plan
-   ```
-4) Apply to provision EKS and VPC:  
-   ```
-    terraform apply
-   ```
-5) Approve when prompted to proceed.
-
-## 🔍 Verify EKS and VPC
-6) Confirm the EKS cluster is created in the AWS Console.
-<img width="1918" height="551" alt="image" src="https://github.com/user-attachments/assets/5f3898a6-04d2-4898-a979-d1ecc6ae3bfe" />
-
-19) Confirm the VPC and networking components are created (VPC, subnets, route tables, IGW/NAT). +
-<img width="1919" height="912" alt="image" src="https://github.com/user-attachments/assets/450fc659-832f-4a7f-b2ac-a1e3322c3d98" />
-
-## 🧹 Cleanup
-To destroy all infrastructure and avoid ongoing charges:  
-```
-    terraform destroy
+```bash
+cd ../
+terraform init
+terraform plan -out=.tfplan
+terraform apply .tfplan
 ```
 
+### 4. Verify Outputs
 
-## 🎉 Wrap-up
-With Terraform managing S3 (remote state), DynamoDB (state locking), EKS, and VPC, this repository demonstrates a production-ready, modular, and secure AWS foundation for the Ultimate DevOps Project Demo. Happy Terraforming! 🌱
+```bash
+terraform output
+```
+
+Expected outputs include:
+- `cluster_name`
+- `cluster_endpoint`
+- `vpc_id`
+
+### 5. Connect kubectl to EKS
+
+```bash
+aws eks update-kubeconfig --region us-west-2 --name my-eks-cluster
+kubectl get nodes
+```
+
+## Operational Notes
+
+- If pod scheduling pressure increases, scale node group from AWS CLI or update Terraform variable `node_groups`.
+- This stack intentionally uses private subnets for worker nodes and NAT for outbound access.
+- Keep Terraform as source of truth for infra changes; avoid manual AWS console edits to prevent drift.
+
+## Cleanup
+
+To avoid ongoing cost:
+
+```bash
+cd Terraform
+terraform destroy
+```
+
+If backend resources are no longer needed:
+
+```bash
+cd backend
+terraform destroy
+```
+
+## Why This Matters
+
+This Terraform implementation demonstrates production-relevant platform engineering practices:
+- Reproducible infrastructure
+- Team-safe state management (locking + remote state)
+- Secure network segmentation (public/private design)
+- Managed Kubernetes foundation for GitOps and CI/CD delivery
 
 
 
