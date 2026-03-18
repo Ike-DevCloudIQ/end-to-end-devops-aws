@@ -936,7 +936,7 @@ gh run view <run-id> --log
 
 **Ikenna Ubah**  
 Cloud Platform and DevOps Engineer  
-[GitHub](https://github.com/Ike-DevCloudIQ) | [Email](mailto:ikenna@example.com)
+[GitHub](https://github.com/Ike-DevCloudIQ) | [Email](mailto:ikennaubah2@yahoo.com)
 
 ---
 

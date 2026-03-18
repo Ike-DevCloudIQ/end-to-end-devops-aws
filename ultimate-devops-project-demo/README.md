@@ -1,122 +1,131 @@
-# End-to-End DevOps Project on AWS with CI/CD Pipeline
+# Ultimate DevOps Project Demo
 
-This project demonstrates a comprehensive **end-to-end CI/CD infrastructure** for a containerized application.  
-It leverages **Terraform** for AWS infrastructure provisioning, **GitHub Actions** for continuous integration, and **ArgoCD** for GitOps-based continuous deployment on a Kubernetes cluster.
+This directory contains the application and delivery stack for a full end-to-end DevOps implementation on AWS.
 
----
+It demonstrates:
+- Local platform execution with Docker Compose
+- Kubernetes deployment of multi-service workloads
+- GitHub Actions CI/CD automation
+- GitOps continuous delivery with ArgoCD
+- Observability with OpenTelemetry, Jaeger, Prometheus, and Grafana
 
-## Project Architecture
+## Architecture
 
-![alt text](<../Images/Ultimate Project Architecture.gif>)
+![Project Architecture](../Images/Ultimate%20Project%20Architecture.gif)
 
----
-### 1. ☁️ AWS Infrastructure (Terraform Provisioned)
-- **EC2 Instance**: Required for accessing EKS and AWS CLI.  
-- **Backend for Terraform (S3 & DynamoDB)**:  
-  Stores state files in S3 and uses DynamoDB for state locking to ensure collaboration.  
-- **Amazon EKS (Elastic Kubernetes Service)**:  
-  Fully managed Kubernetes cluster with auto-healing and auto-scaling features. Used to deploy our applications with continuous deployment support.  
-- **Amazon VPC (Virtual Private Cloud)**:  
-  Provides secure VPC with public/private subnets, route tables, and isolated networking for security.  
-- **Amazon Route53**:  
-  Used for DNS and routing traffic to our domain (e.g., [https://iamnkdevopseng.shop](https://iamnkdevopseng.shop)).  
----
-### 2. 💻 Kubernetes Environment
-- **EKS Cluster**: Managed Kubernetes service for deploying and managing workloads.  
-- **Ingress Resource**: Exposes the application publicly.  
----
-### 3. ⚙️ GitHub Actions (CI/CD Integration)
-- Automates the build, test, Docker image creation, and manifest update process.  
-- Pipeline Stages:  
-  1. **Build** → Checkout code, setup Go, install dependencies, build services, and run unit tests.  
-  2. **Code Quality** → Runs `golangci-lint` for linting and code quality checks.  
-  3. **Docker** → Builds and pushes Docker images to Docker Hub.  
-  4. **Update Manifests** → Updates Kubernetes manifests with new image tags and pushes them to the repo.  
----
-### 4. 🔁 ArgoCD (Continuous Deployment)
-- Continuously syncs Kubernetes manifests from GitHub.  
-- Ensures that the application is always deployed with the latest version on EKS.  
+## Purpose and Scope
 
----
+The goal of this project is to show practical DevOps and platform engineering capability beyond a basic app deploy.
 
-## ✅ Prerequisites
-- AWS account with required IAM permissions  
-- Docker, AWS CLI, Terraform & Git installed locally  
-- EKS Cluster (provisioned via Terraform)  
+Core capabilities implemented:
+- Build and run a realistic microservices platform locally
+- Promote workloads to Kubernetes with repeatable manifests
+- Automate image build and manifest update flows in CI
+- Use Git as source of truth for deployments (GitOps)
+- Operate with observability-first debugging
 
----
+## Platform Overview
 
-## 📁 Project Structure
-```
-.
-├── .github/               # GitHub Actions & CI configs
-├── ArgoCD/                # ArgoCD set up documentation  
-├── internal/              # Internal tools/scripts
-├── kubernetes/            # Kubernetes manifests for all services
-├── pb/                    # Protocol buffers
-├── src/                   # Source code of all services
-├── test/                  # Testing configs
-├── CHANGELOG.md
-├── CONTRIBUTING.md
-├── LICENSE
-├── Makefile
-├── README.md
+### 1. Cloud and Infrastructure Foundation
+Infrastructure is provisioned with Terraform from [../ultimate-devops-project-terraform/README.md](../ultimate-devops-project-terraform/README.md), including:
+- VPC with public/private subnets across AZs
+- NAT gateways and internet routing
+- EKS cluster and managed node group
+- S3 + DynamoDB Terraform state backend
+
+### 2. Kubernetes Application Layer
+- Multi-service workloads deployed with manifests in [kubernetes/](kubernetes/)
+- Service exposure through services and ingress resources
+- Namespace-based workload organization
+- Resource and readiness controls for operational stability
+
+### 3. CI/CD Automation (GitHub Actions)
+Workflows automate image build and deployment updates.
+
+Main automation files:
+- [../.github/workflows/cd-demo-app-gitops.yaml](../.github/workflows/cd-demo-app-gitops.yaml)
+- [.github/workflows/ci.yaml](.github/workflows/ci.yaml)
+
+The demo-app GitOps pipeline updates Kubernetes image tags and pushes manifest changes to trigger ArgoCD reconciliation.
+
+### 4. GitOps Delivery (ArgoCD)
+- ArgoCD watches Git manifests and syncs cluster state
+- Drift is detected and corrected automatically when auto-sync is enabled
+- Application definitions and setup docs are in [ArgoCD/README.md](ArgoCD/README.md)
+
+### 5. Observability
+- Distributed tracing: Jaeger
+- Metrics and dashboards: Prometheus + Grafana
+- Telemetry pipeline: OpenTelemetry collector and instrumented services
+
+## Evidence Screenshots
+
+### Local and Application Access
+![Live App](../Images/Live%20App.png)
+
+### Kubernetes Runtime
+![kubectl get deployment](../Images/kubectl%20get%20deployment.png)
+
+![kubectl get pods](../Images/kubectl%20get%20pods.png)
+
+### GitOps Status
+![ArgoCD Synced and Healthy](../Images/ArgoCD%20app%20Synced%20and%20Healthy.png)
+
+### AWS Runtime Context
+![Load Balancer details](../Images/Load%20Balancer%20details.png)
+
+## Directory Structure
+
+```text
+ultimate-devops-project-demo/
+├── .github/workflows/
+├── ArgoCD/
+├── internal/
+├── kubernetes/
+├── pb/
+├── src/
+├── test/
+├── demo-app-image/
 ├── docker-compose.yml
-├── buildkitd.toml
-├── package.json
-└── other configs (.env, renovate.json5, etc.)
+├── local-setup-readme.md
+├── GitHub Actions Readme.md
+└── README.md
 ```
 
----
+## Important Links (Updated)
 
-## 🧱 Project Components
+- Project root README: [../README.md](../README.md)
+- Terraform documentation: [../ultimate-devops-project-terraform/README.md](../ultimate-devops-project-terraform/README.md)
+- Local setup guide: [local-setup-readme.md](local-setup-readme.md)
+- Kubernetes docs: [kubernetes/README.md](kubernetes/README.md)
+- ArgoCD docs: [ArgoCD/README.md](ArgoCD/README.md)
+- GitHub Actions notes: [GitHub Actions Readme.md](GitHub%20Actions%20Readme.md)
+- Root CI/CD workflow: [../.github/workflows/cd-demo-app-gitops.yaml](../.github/workflows/cd-demo-app-gitops.yaml)
 
-### 🚀 Terraform (Infrastructure as Code)
-Automates provisioning of:  
-- VPC, subnets, internet gateway  
-- EKS Cluster  
-- S3 bucket & DynamoDB for state management
+## Quick Start
 
-📄 [Terraform README](https://github.com/I-am-nk/ultimate-devops-project-terraform/blob/main/README.md)
+### Local (Docker Compose)
 
----
-### 🐳 Docker Compose
-- Runs the project locally with a single `docker-compose.yml` file.  
-- Helps test the application before deploying.
+```bash
+docker compose up -d
+docker compose ps
+```
 
-📄 [Docker Compose README](https://github.com/I-am-nk/ultimate-devops-project-demo/blob/main/local-setup-readme.md)
+### Kubernetes (cluster context configured)
 
----
-### ☸️ Kubernetes (Container Orchestration)
-- Deployments, Services, Ingress, and LoadBalancer services.  
-- Service Account setup.  
-- Manifests are automatically updated by GitHub Actions.
+```bash
+kubectl get pods -A
+kubectl get svc -A
+```
 
-📄 [Kubernetes README →](./kubernetes/README.md)
- 
-  
-  ---
-### 🚀 ArgoCD (GitOps Continuous Deployment)
-- Auto-syncs Kubernetes manifests from GitHub.  
-- Deploys the app to the EKS cluster continuously.  
+### CI/CD Trigger for demo-app
+Changes inside [demo-app-image/](demo-app-image/) trigger the demo-app workflow and image rollout path.
 
-📄 [ArgoCD README →](./ArgoCD/README.md)
+## Author
 
----
-### 🛠️ GitHub Actions (CI/CD)
-Defines the pipeline with:  
-- Code checkout  
-- Build & push Docker images  
-- Code quality checks  
-- Kubernetes manifest updates
+Ikenna Ubah  
+Cloud Platform and DevOps Engineer
 
-📄 [Github Actions README →](https://github.com/I-am-nk/ultimate-devops-project-demo/blob/main/GitHub%20Actions%20Readme.md))
-
----
-
-## 👨‍💻 Author
-**Ikenna Ubah**  
-Cloud Platform |  DevOps Engineer  
-
-## 📬 **Contact**: 
-[LinkedIn](https://www.linkedin.com/in/ikenna2/) | [Email](Ikennaubah2@yahoo.com)
+Contact:
+- LinkedIn: https://www.linkedin.com/in/ikenna2/
+- Email: ikennaubah2@yahoo.com
