@@ -29,8 +29,8 @@ It includes four jobs:
 
 ## ⚙️ Setup Instructions  
 
-### 1. Configure GitHub Secrets  
-You need to add the following secrets in your GitHub repository:  
+### 1. Configure GitHub Secrets
+You need to add the following secrets in your GitHub repository:
 
 | Secret Name         | Description |
 |----------------------|-------------|
@@ -38,9 +38,7 @@ You need to add the following secrets in your GitHub repository:
 | `DOCKER_TOKEN`       | Docker Hub Access Token (not password) |
 | `GITHUB_TOKEN`       | Provided by GitHub automatically (no setup needed) |
 
-➡️ Go to: **Repo Settings > Secrets and Variables > Actions > New Repository Secret**  
-
-<img width="1138" height="433" alt="image" src="https://github.com/user-attachments/assets/98b2b079-d672-4dad-939a-e45ca9941e46" />
+➡️ Go to: **Repo Settings > Secrets and Variables > Actions > New Repository Secret**
 
 ---
 
