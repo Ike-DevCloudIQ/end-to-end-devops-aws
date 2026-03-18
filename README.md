@@ -1,5 +1,7 @@
 # End-to-End DevOps on AWS: Microservices, CI/CD, GitOps, and Observability
 
+[GitHub](https://github.com/Ike-DevCloudIQ) | [LinkedIn](https://www.linkedin.com/in/ikenna2/) | [Email](mailto:ikennaubah2@yahoo.com)
+
 **A production-grade DevOps implementation** of the OpenTelemetry Astronomy Shop, demonstrating the complete platform engineering journey from local development through cloud deployment on AWS. This project is designed to showcase real-world DevOps practices, operational decision-making, and troubleshooting expertise.
 
 ## Executive Summary
@@ -587,55 +589,48 @@ The OpenTelemetry Astronomy Shop consists of 16 microservices, deployed across m
 
 ## Tools and Technologies (Validated in Production)
 
-### Cloud Platform & Infrastructure
-- **AWS EKS**: Managed Kubernetes service (control plane + worker nodes)
-- **AWS VPC**: Network isolation with public/private subnets across 3 AZs
-- **AWS IAM**: Role-based access control for services and RBAC
-- **AWS EC2**: t3.medium instances as Kubernetes nodes
-- **AWS ELB**: External load balancer for service exposure
-- **AWS S3 & DynamoDB**: Remote Terraform state backend with locking
+### Cloud Platform
+![AWS](https://img.shields.io/badge/AWS-Cloud-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
+![Amazon EKS](https://img.shields.io/badge/Amazon%20EKS-Kubernetes%20Control%20Plane-FF9900?style=for-the-badge&logo=amazoneks&logoColor=white)
+![Amazon VPC](https://img.shields.io/badge/Amazon%20VPC-Network%20Segmentation-8C4FFF?style=for-the-badge&logo=amazonaws&logoColor=white)
+![Amazon EC2](https://img.shields.io/badge/Amazon%20EC2-Worker%20Nodes-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white)
+![Elastic Load Balancing](https://img.shields.io/badge/Elastic%20Load%20Balancing-Traffic%20Ingress-146EB4?style=for-the-badge&logo=awselasticloadbalancing&logoColor=white)
+![IAM](https://img.shields.io/badge/IAM-Access%20Control-DD344C?style=for-the-badge&logo=amazonaws&logoColor=white)
+![S3](https://img.shields.io/badge/S3-Remote%20State-569A31?style=for-the-badge&logo=amazons3&logoColor=white)
+![DynamoDB](https://img.shields.io/badge/DynamoDB-State%20Locking-4053D6?style=for-the-badge&logo=amazondynamodb&logoColor=white)
 
 ### Infrastructure as Code
-- **Terraform**: Declarative infrastructure definition and deployment
-- **Terraform Modules**: Reusable component abstractions (VPC, EKS, node group, security)
-- **State Locking**: DynamoDB prevents concurrent modifications
+![Terraform](https://img.shields.io/badge/Terraform-IaC-844FBA?style=for-the-badge&logo=terraform&logoColor=white)
+![Terraform Modules](https://img.shields.io/badge/Terraform%20Modules-Reusable%20Components-623CE4?style=for-the-badge&logo=terraform&logoColor=white)
+![Remote State](https://img.shields.io/badge/Remote%20State-S3%20%2B%20DynamoDB-2E8B57?style=for-the-badge)
 
-### Container Runtime & Build
-- **Docker**: Container images (multi-stage builds for optimization)
-- **Docker Compose**: Local environment orchestration (16 services on laptop)
-- **Docker Hub**: Public container registry (image versioning with run tags)
+### Containers and Runtime
+![Docker](https://img.shields.io/badge/Docker-Container%20Runtime-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Docker Compose](https://img.shields.io/badge/Docker%20Compose-Local%20Orchestration-1D63ED?style=for-the-badge&logo=docker&logoColor=white)
+![Docker Hub](https://img.shields.io/badge/Docker%20Hub-Image%20Registry-0DB7ED?style=for-the-badge&logo=docker&logoColor=white)
+![Buildx](https://img.shields.io/badge/Docker%20Buildx-Multi--Platform%20Builds-1C78C0?style=for-the-badge&logo=docker&logoColor=white)
 
-### Container Orchestration
-- **Kubernetes (1.30+)**: Pod lifecycle, scheduling, networking, storage
-- **EKS CNI Plugin**: AWS-native pod networking (AWS IP addresses for pods)
-- **Helm Charts**: Optional package management for Kubernetes applications
+### Kubernetes and GitOps
+![Kubernetes](https://img.shields.io/badge/Kubernetes-v1.30%2B-326CE5?style=for-the-badge&logo=kubernetes&logoColor=white)
+![kubectl](https://img.shields.io/badge/kubectl-Cluster%20Operations-2F86EB?style=for-the-badge&logo=kubernetes&logoColor=white)
+![Helm](https://img.shields.io/badge/Helm-Package%20Manager-0F1689?style=for-the-badge&logo=helm&logoColor=white)
+![EKS CNI](https://img.shields.io/badge/EKS%20CNI-Pod%20Networking-1A73E8?style=for-the-badge)
+![ArgoCD](https://img.shields.io/badge/ArgoCD-GitOps-FE6B8B?style=for-the-badge&logo=argo&logoColor=white)
+![Auto Sync](https://img.shields.io/badge/ArgoCD-Auto%20Sync%20%26%20Drift%20Control-EF476F?style=for-the-badge)
 
-### CI/CD Automation
-- **GitHub Actions**: Workflow automation (build, push, manifest update, deploy)
-- **GitHub Secrets**: Secure storage for Docker Hub credentials and SSH keys
-- **Docker Buildx**: Cross-platform image building (if needed for ARM/x86 support)
+### CI/CD and Source Control
+![GitHub](https://img.shields.io/badge/GitHub-Source%20Hosting-181717?style=for-the-badge&logo=github&logoColor=white)
+![Git](https://img.shields.io/badge/Git-Version%20Control-F05032?style=for-the-badge&logo=git&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/GitHub%20Actions-CI%2FCD-2088FF?style=for-the-badge&logo=githubactions&logoColor=white)
+![GitHub Secrets](https://img.shields.io/badge/GitHub%20Secrets-Credential%20Management-0969DA?style=for-the-badge&logo=github&logoColor=white)
 
-### GitOps Deployment
-- **ArgoCD**: Declarative application management with Git sync
-- **ArgoCD Application CRD**: Kubernetes-native resource for application definitions
-- **Auto-Sync**: Continuous reconciliation without manual `kubectl apply`
-
-### Observability Stack
-- **Jaeger**: Distributed tracing backend (trace collection, storage, UI)
-- **Grafana**: Metrics visualization and dashboard creation
-- **Prometheus**: Time-series metrics database and scraping engine
-- **OpenTelemetry Collector**: Agent running on every node (DaemonSet) collecting traces
-- **OpenTelemetry Instrumentation**: SDKs in services sending traces to collector
-
-### Monitoring & Alerting
-- **Kubernetes Events**: Built-in event stream for pod/node status changes
-- **kubectl logs/describe**: CLI tools for pod introspection
-- **kubectl top**: Real-time resource usage (CPU, memory) by pod/node
-
-### Version Control & Collaboration
-- **Git**: Source control for infrastructure, application, and deployment configuration
-- **GitHub**: Repository hosting with built-in Actions and secrets management
-- **Branch Strategies**: Main branch as source of truth for GitOps
+### Observability and Monitoring
+![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-Instrumentation-000000?style=for-the-badge&logo=opentelemetry&logoColor=white)
+![OTel Collector](https://img.shields.io/badge/OTel%20Collector-DaemonSet%20Telemetry-3E7BFA?style=for-the-badge)
+![Jaeger](https://img.shields.io/badge/Jaeger-Distributed%20Tracing-66CFE3?style=for-the-badge&logo=jaeger&logoColor=white)
+![Prometheus](https://img.shields.io/badge/Prometheus-Metrics-E6522C?style=for-the-badge&logo=prometheus&logoColor=white)
+![Grafana](https://img.shields.io/badge/Grafana-Dashboards-F46800?style=for-the-badge&logo=grafana&logoColor=white)
+![Kubernetes Events](https://img.shields.io/badge/Kubernetes-Events%20and%20Triage-316CE6?style=for-the-badge&logo=kubernetes&logoColor=white)
 
 ---
 
